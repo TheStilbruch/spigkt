@@ -1,7 +1,11 @@
-out/
-.idea/
-gradle/
-build/
-.gradle/
-gradlew
 
+/build/
+/.idea/
+/out/
+/gradle/
+/.gradle/
+/gradlew
+/gradlew.bat
+
+src/main/resources/
+src/test/

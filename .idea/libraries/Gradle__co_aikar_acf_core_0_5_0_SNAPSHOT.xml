@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: co.aikar:acf-core:0.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.aikar/acf-core/0.5.0-SNAPSHOT/bd9e93285871cf265c8ba5b35808c9701463852c/acf-core-0.5.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.aikar/acf-core/0.5.0-SNAPSHOT/ba5b730bbfdb5dfb7f6896f699252ee9943cd2d3/acf-core-0.5.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

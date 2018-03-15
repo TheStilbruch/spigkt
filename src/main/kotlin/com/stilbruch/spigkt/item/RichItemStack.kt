@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta
 class RichItemStack private constructor(material: Material) : ItemStack(material) {
 
     companion object {
-        fun create(material: Material, func: RichItemStack.() -> Unit): RichItemStack {
+        fun new(material: Material, func: RichItemStack.() -> Unit): RichItemStack {
             val stack = RichItemStack(material)
             stack.func()
             return stack
@@ -41,19 +41,29 @@ class RichItemStack private constructor(material: Material) : ItemStack(material
         }
     }
 
-    fun setGlassColor(color: DyeColor) {
+    fun getLore(): List<String> {
+        return itemMeta.lore
+    }
+
+    fun setColor(color: DyeColor) {
         durability = color.woolData.toShort()
     }
 
-    fun setEnchant(enchant: Enchantment, level: Int){
+    fun addEnchant(enchant: Enchantment, level: Int){
         changeMeta {
             addEnchant(enchant, level, true)
         }
     }
 
-    fun setFlag(itemFlag: ItemFlag){
+    fun addFlag(itemFlag: ItemFlag){
         changeMeta {
             addItemFlags(itemFlag)
+        }
+    }
+
+    fun unbreakable(state: Boolean = true){
+        changeMeta {
+            isUnbreakable = state
         }
     }
 }

@@ -2,7 +2,9 @@
 
 package com.stilbruch.spigkt.command
 
-class KCommand(val name: String, init: KCommand.() -> Unit) {
+class KCommand(val names: Array<String>, init: KCommand.() -> Unit) {
+
+    constructor(name: String, init: KCommand.() -> Unit) : this(arrayOf(name), init)
 
     val subCommands: List<KCommand> = listOf()
     val permission: String? = null
@@ -12,6 +14,10 @@ class KCommand(val name: String, init: KCommand.() -> Unit) {
 
     init {
         this.apply(init)
+    }
+
+    fun matches(input: String?): Boolean {
+        return names.contains(input ?: return false)
     }
 
 }

@@ -22,63 +22,57 @@ var SERVER: Server
 val LOGGER: Logger
     get() = SERVER.logger
 
-fun <T : Event> listener(plugin: JavaPlugin, f: T.() -> Unit) {
-    SERVER.pluginManager.registerEvents(object : Listener {
-        @EventHandler
-        fun handle(e: T) {
-            e.apply(f)
-        }
-    }, plugin)
-}
+val PLUGIN: KPlugin
+    get() = KPlugin.instance!!
 
 object Tasks {
 
-    fun runTask(plugin: JavaPlugin, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTask(toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTask(plugin)
+        }.runTask(PLUGIN)
     }
 
-    fun runTaskLater(plugin: JavaPlugin, delay: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTaskLater(delay: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTaskLater(plugin, delay)
+        }.runTaskLater(PLUGIN, delay)
     }
 
-    fun runTaskTimer(plugin: JavaPlugin, delay: Long, repeat: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTaskTimer(delay: Long, repeat: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTaskTimer(plugin, delay, repeat)
+        }.runTaskTimer(PLUGIN, delay, repeat)
     }
 
-    fun runTaskAsync(plugin: JavaPlugin, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTaskAsync(toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTaskAsynchronously(plugin)
+        }.runTaskAsynchronously(PLUGIN)
     }
 
-    fun runTaskLaterAsync(plugin: JavaPlugin, delay: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTaskLaterAsync(delay: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTaskLaterAsynchronously(plugin, delay)
+        }.runTaskLaterAsynchronously(PLUGIN, delay)
     }
 
-    fun runTaskTimerAsync(plugin: JavaPlugin, delay: Long, repeat: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
+    fun runTaskTimerAsync(delay: Long, repeat: Long, toRun: BukkitRunnable.() -> Unit): BukkitTask {
         return object : BukkitRunnable() {
             override fun run() {
                 this.toRun()
             }
-        }.runTaskTimerAsynchronously(plugin, delay, repeat)
+        }.runTaskTimerAsynchronously(PLUGIN, delay, repeat)
     }
 
 }

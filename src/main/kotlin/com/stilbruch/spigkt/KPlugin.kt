@@ -4,14 +4,19 @@ package com.stilbruch.spigkt
 
 import com.stilbruch.spigkt.command.CommandContext
 import com.stilbruch.spigkt.command.KCommand
-import com.stilbruch.spigkt.gui.GUIListenerManager
+import com.stilbruch.spigkt.gui.GuiListener
+import org.bukkit.ChatColor.GRAY
+import org.bukkit.ChatColor.RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import org.bukkit.event.Listener
-import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.ChatColor.*
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
+import org.bukkit.plugin.EventExecutor
+import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.function.Consumer
 
 abstract class KPlugin(name: String) : JavaPlugin() {
 
@@ -27,29 +32,27 @@ abstract class KPlugin(name: String) : JavaPlugin() {
     val commands: MutableSet<KCommand> = mutableSetOf()
 
     override fun onEnable() {
-        registerListener(GUIListenerManager(this))
+        registerListener(GuiListener(this))
     }
 
     fun registerListener(listener: Listener) {
         SERVER.pluginManager.registerEvents(listener, this)
     }
 
-    fun <T : Event> listener(f: T.() -> Unit) {
-        SERVER.pluginManager.registerEvents(object : Listener {
-            @EventHandler
-            fun handle(e: T) {
-                e.apply(f)
+    fun <E : Event> listen(type : Class<out E>, priority : EventPriority = EventPriority.NORMAL, ignoreCancelled : Boolean = true, handler : (E.() -> Unit)) {
+        val listener = object : Listener, EventExecutor {
+            override fun execute(listener : Listener?, event : Event) {
+                if (listener != this) return
+                (event as E).apply(handler)
             }
-        }, this)
+        }
+        SERVER.pluginManager.registerEvent(type, listener, priority, listener, PLUGIN, ignoreCancelled)
     }
 
-    fun formatMessage(message: String): String {
-        return "$displayName $message"
-    }
-
-    fun formatError(message: String): String {
-        return "$displayName$RED $message"
-    }
+    inline fun <reified E : Event> listen(priority : EventPriority = EventPriority.NORMAL,
+                                          ignoreCancelled : Boolean = true,
+                                          noinline handler : E.() -> Unit) =
+            listen(E::class.java, priority, ignoreCancelled, handler)
 
     final override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
         val command: KCommand = commands.find { it.matches(label) } ?: return false

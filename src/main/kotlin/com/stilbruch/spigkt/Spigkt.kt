@@ -5,6 +5,7 @@ package com.stilbruch.spigkt
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.Server
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -24,6 +25,19 @@ val LOGGER: Logger
 
 val PLUGIN: KPlugin
     get() = KPlugin.instance!!
+
+//Extension Functions
+fun CommandSender.sendInfo(message: String) {
+    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.GRAY} $message")
+}
+
+fun CommandSender.sendError(message: String) {
+    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.RED} $message")
+}
+
+fun CommandSender.sendGood(message: String) {
+    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.GREEN} $message")
+}
 
 object Tasks {
 

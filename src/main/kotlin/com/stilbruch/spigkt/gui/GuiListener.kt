@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.plugin.java.JavaPlugin
 
-class GUIListenerManager(private val plugin: JavaPlugin): Listener {
+class GuiListener(private val plugin: JavaPlugin): Listener {
 
     @EventHandler
     fun onClick(e: InventoryClickEvent) {
@@ -17,7 +17,8 @@ class GUIListenerManager(private val plugin: JavaPlugin): Listener {
         if (e.currentItem == null) return
 
         val slot = e.slot
-        val gui: Gui = e.inventory.holder as Gui? ?: return
+        if (e.inventory.holder !is Gui) return
+        val gui: Gui = e.inventory.holder as? Gui ?: return
         if (gui.plugin != plugin) return
 
         if (!gui.clickable) e.isCancelled = true
@@ -27,13 +28,15 @@ class GUIListenerManager(private val plugin: JavaPlugin): Listener {
 
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        val gui: Gui = e.inventory.holder as Gui? ?: return
+        if (e.inventory.holder !is Gui) return
+        val gui: Gui = (e.inventory.holder as? Gui) ?: return
         if (gui.plugin == plugin) gui.onClose?.invoke(e)
     }
 
     @EventHandler
     fun onOpen(e: InventoryOpenEvent) {
-        val gui: Gui = e.inventory.holder as Gui? ?: return
+        if (e.inventory.holder !is Gui) return
+        val gui: Gui = e.inventory.holder as? Gui ?: return
         if (gui.plugin == plugin) gui.onOpen?.invoke(e)
     }
 }

@@ -9,11 +9,17 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-class RichItemStack private constructor(material: Material) : ItemStack(material) {
+class RichItemStack private constructor(stack: ItemStack) : ItemStack(stack) {
 
     companion object {
         fun new(material: Material, func: RichItemStack.() -> Unit): RichItemStack {
-            val stack = RichItemStack(material)
+            val stack = RichItemStack(ItemStack(material))
+            stack.func()
+            return stack
+        }
+
+        fun new(stack: ItemStack, func: RichItemStack.() -> Unit): RichItemStack {
+            val stack = RichItemStack(stack)
             stack.func()
             return stack
         }

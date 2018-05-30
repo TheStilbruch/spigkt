@@ -21,12 +21,6 @@ class Gui private constructor(val plugin: JavaPlugin) : InventoryHolder {
         }
     }
 
-    private val inv: Inventory by lazy {
-        val i = Bukkit.createInventory(this, rows * 9, title)!!
-        slots.forEach { slot, item -> i.setItem(slot, item) }
-        i
-    }
-
     var title = ""
     var rows = 1
     var clickable = true
@@ -45,12 +39,34 @@ class Gui private constructor(val plugin: JavaPlugin) : InventoryHolder {
         slots.forEach { setItem(itemStack, it, clickEvent) }
     }
 
+    fun fillRow(itemStack: ItemStack, row: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+        val slots = (0 until 9).map { it + (9 * row) }.toIntArray()
+        setItem(itemStack, *slots, clickEvent = clickEvent)
+    }
+
+    fun fillColumn(itemStack: ItemStack, column: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+        val slots = (0 until rows).map { (it * 9) + column }.toIntArray()
+        setItem(itemStack, *slots, clickEvent = clickEvent)
+    }
+
     fun fill(itemStack: ItemStack, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
         for (i in 0 until (rows * 9)){
             setItem(itemStack, i, clickEvent)
         }
     }
 
-    override fun getInventory(): Inventory = inv
+    fun fillEmpty(itemStack: ItemStack, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+        for (i in 0 until (rows * 9)){
+            if (!slots.containsKey(i)){
+                setItem(itemStack, i, clickEvent)
+            }
+        }
+    }
+
+    override fun getInventory(): Inventory {
+        val i = Bukkit.createInventory(this, rows * 9, title)!!
+        slots.forEach { slot, item -> i.setItem(slot, item) }
+        return i
+    }
 
 }

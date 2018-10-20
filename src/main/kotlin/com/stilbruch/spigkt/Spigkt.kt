@@ -2,18 +2,16 @@
 
 package com.stilbruch.spigkt
 
+import com.stilbruch.spigkt.gui.Gui
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.Server
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
-import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
-import java.util.UUID
+import java.util.*
 import java.util.logging.Logger
 
 var SERVER: Server
@@ -23,20 +21,46 @@ var SERVER: Server
 val LOGGER: Logger
     get() = SERVER.logger
 
+val CONSOLE: CommandSender
+    get() = Bukkit.getConsoleSender()
+
 val PLUGIN: KPlugin
     get() = KPlugin.instance!!
 
 //Extension Functions
 fun CommandSender.sendInfo(message: String) {
-    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.GRAY} $message")
+    this.sendMessage("${PLUGIN.displayName}${org.bukkit.ChatColor.GRAY} $message")
 }
 
 fun CommandSender.sendError(message: String) {
-    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.RED} $message")
+    this.sendMessage("${PLUGIN.displayName}${org.bukkit.ChatColor.RED} $message")
 }
 
 fun CommandSender.sendGood(message: String) {
-    this.sendMessage("${com.stilbruch.spigkt.PLUGIN.displayName}${org.bukkit.ChatColor.GREEN} $message")
+    this.sendMessage("${PLUGIN.displayName}${org.bukkit.ChatColor.GREEN} $message")
+}
+
+fun HumanEntity.openGui(gui: Gui) {
+    this.openInventory(gui.inventory)
+}
+
+//Logging functions
+object Log {
+    fun info(message: String) {
+        CONSOLE.sendInfo(message)
+    }
+
+    fun error(message: String) {
+        CONSOLE.sendError(message)
+    }
+
+    fun good(message: String) {
+        CONSOLE.sendGood(message)
+    }
+
+    fun debug(message: String) {
+        if (PLUGIN.verbose) CONSOLE.sendMessage("${PLUGIN.displayName}${org.bukkit.ChatColor.BLUE} $message")
+    }
 }
 
 object Tasks {

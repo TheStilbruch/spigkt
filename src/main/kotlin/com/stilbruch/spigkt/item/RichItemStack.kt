@@ -4,10 +4,12 @@ package com.stilbruch.spigkt.item
 
 import org.bukkit.DyeColor
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.inventory.meta.SkullMeta
 
 class RichItemStack private constructor(stack: ItemStack) : ItemStack(stack) {
 
@@ -71,5 +73,11 @@ class RichItemStack private constructor(stack: ItemStack) : ItemStack(stack) {
         changeMeta {
             isUnbreakable = state
         }
+    }
+
+    fun setSkullOwner(player: OfflinePlayer) {
+        val meta = (itemMeta as SkullMeta)
+        meta.owningPlayer = player
+        this.itemMeta = meta
     }
 }

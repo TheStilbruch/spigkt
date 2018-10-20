@@ -10,8 +10,8 @@ abstract class KModule {
         PLUGIN.modules.add(this)
     }
 
-    fun onEnable() {}
-    fun onDisable() {}
-    fun onLoad() {}
+    open fun onEnable() {}
+    open fun onDisable() {}
+    open fun onLoad() {}
 
 }

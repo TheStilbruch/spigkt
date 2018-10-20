@@ -1,11 +1,12 @@
 package com.stilbruch.spigkt.configuration
 
+import com.stilbruch.spigkt.KModule
 import com.stilbruch.spigkt.Log
 import com.stilbruch.spigkt.PLUGIN
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
-class KConfig(val name: String) {
+class KConfig(val name: String) : KModule() {
 
     private val file: File = File(PLUGIN.dataFolder, name)
     private lateinit var yamlConfig: YamlConfiguration

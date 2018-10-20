@@ -25,7 +25,7 @@ val CONSOLE: CommandSender
     get() = Bukkit.getConsoleSender()
 
 val PLUGIN: KPlugin
-    get() = KPlugin.instance!!
+    get() = KPlugin.instance
 
 //Extension Functions
 fun CommandSender.sendInfo(message: String) {

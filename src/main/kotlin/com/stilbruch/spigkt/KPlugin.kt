@@ -5,36 +5,47 @@ package com.stilbruch.spigkt
 import com.stilbruch.spigkt.command.CommandContext
 import com.stilbruch.spigkt.command.KCommand
 import com.stilbruch.spigkt.gui.GuiListener
-import org.bukkit.ChatColor.GRAY
-import org.bukkit.ChatColor.RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.plugin.EventExecutor
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.function.Consumer
 
-abstract class KPlugin(name: String) : JavaPlugin() {
+abstract class KPlugin(val displayName: String) : JavaPlugin() {
 
     companion object {
-        var instance: KPlugin? = null
+        lateinit var instance: KPlugin
     }
 
     init {
         instance = this
     }
 
-    val displayName: String = "$GRAY[$name$GRAY]"
     private val commands: MutableSet<KCommand> = mutableSetOf()
+    internal val modules: MutableSet<KModule> = mutableSetOf()
     var verbose = false
 
-    override fun onEnable() {
+    final override fun onLoad() {
+        onPluginLoad()
+        modules.forEach(KModule::onLoad)
+    }
+
+    final override fun onEnable() {
+        onPluginEnable()
+        modules.forEach(KModule::onEnable)
         registerListener(GuiListener(this))
     }
+
+    final override fun onDisable() {
+        onPluginDisable()
+        modules.forEach(KModule::onDisable)
+    }
+
+    fun onPluginLoad() {}
+    fun onPluginEnable() {}
+    fun onPluginDisable() {}
 
     /**
      * Registers an event listener

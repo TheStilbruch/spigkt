@@ -6,13 +6,17 @@ import com.stilbruch.spigkt.command.CommandContext
 import com.stilbruch.spigkt.command.KCommand
 import com.stilbruch.spigkt.gui.GuiListener
 import org.bukkit.ChatColor.GRAY
+import org.bukkit.ChatColor.RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.event.Event
+import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.plugin.EventExecutor
+import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.function.Consumer
 
 abstract class KPlugin(name: String) : JavaPlugin() {
 
@@ -25,7 +29,7 @@ abstract class KPlugin(name: String) : JavaPlugin() {
     }
 
     val displayName: String = "$GRAY[$name$GRAY]"
-    val commands: MutableSet<KCommand> = mutableSetOf()
+    private val commands: MutableSet<KCommand> = mutableSetOf()
     var verbose = false
 
     override fun onEnable() {

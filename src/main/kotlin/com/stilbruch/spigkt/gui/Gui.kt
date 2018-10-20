@@ -9,13 +9,12 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 
-class Gui private constructor(val plugin: JavaPlugin) : InventoryHolder {
+class Gui private constructor() : InventoryHolder {
 
     companion object {
-        fun new(plugin: JavaPlugin, init: Gui.() -> Unit = {}): Gui {
-            val gui = Gui(plugin)
+        fun new(init: Gui.() -> Unit = {}): Gui {
+            val gui = Gui()
             gui.apply(init)
             return gui
         }

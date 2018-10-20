@@ -80,7 +80,7 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         val subCommand: KCommand? = command.subCommands.find { it.matches(args.getOrNull(0)) }
 
         return if (subCommand == null) {
-            command.onCommand?.invoke(CommandContext(sender, args))
+            command.handleContext(CommandContext(sender, args))
             true
         } else {
             handleCommand(subCommand, sender, args.drop(1))

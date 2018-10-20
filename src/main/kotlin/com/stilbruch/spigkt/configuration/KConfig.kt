@@ -6,7 +6,7 @@ import com.stilbruch.spigkt.PLUGIN
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
-class KConfig(val name: String) : KModule() {
+open class KConfig(val name: String) : KModule() {
 
     private val file: File = File(PLUGIN.dataFolder, name)
     private lateinit var yamlConfig: YamlConfiguration

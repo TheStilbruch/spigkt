@@ -11,20 +11,21 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.SkullMeta
 
-class RichItemStack private constructor(stack: ItemStack) : ItemStack(stack) {
+open class RichItemStack constructor(
+    material: Material,
+    durability: Short = 0,
+    name: String? = null,
+    lore: List<String>? = null,
+    enchantments: Map<Enchantment, Int>? = null,
+    flags: Set<ItemFlag>? = null
+) : ItemStack(material) {
 
-    companion object {
-        fun new(material: Material, func: RichItemStack.() -> Unit): RichItemStack {
-            val stack = RichItemStack(ItemStack(material))
-            stack.func()
-            return stack
-        }
-
-        fun new(stack: ItemStack, func: RichItemStack.() -> Unit): RichItemStack {
-            val stack = RichItemStack(stack)
-            stack.func()
-            return stack
-        }
+    init {
+        this.durability = durability
+        if (name != null) setName(name)
+        if (lore != null) setLore(lore)
+        enchantments?.forEach(::addEnchant)
+        flags?.forEach(::addFlag)
     }
 
     private fun changeMeta(func: ItemMeta.() -> Unit){
@@ -78,6 +79,12 @@ class RichItemStack private constructor(stack: ItemStack) : ItemStack(stack) {
     fun setSkullOwner(player: OfflinePlayer) {
         val meta = (itemMeta as SkullMeta)
         meta.owningPlayer = player
+        this.itemMeta = meta
+    }
+
+    fun setSkullOwner(owner: String) {
+        val meta = (itemMeta as SkullMeta)
+        meta.owner = owner
         this.itemMeta = meta
     }
 }

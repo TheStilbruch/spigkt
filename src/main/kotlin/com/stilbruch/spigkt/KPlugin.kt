@@ -23,7 +23,7 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         instance = this
     }
 
-    private val commands: MutableSet<KCommand> = mutableSetOf()
+    protected val commands: MutableSet<KCommand> = mutableSetOf()
     internal val modules: MutableSet<KModule> = mutableSetOf()
     var verbose = false
 
@@ -43,9 +43,9 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         modules.forEach(KModule::onDisable)
     }
 
-    open fun onPluginLoad() {}
-    open fun onPluginEnable() {}
-    open fun onPluginDisable() {}
+    abstract fun onPluginLoad()
+    abstract fun onPluginEnable()
+    abstract fun onPluginDisable()
 
     /**
      * Registers an event listener

@@ -10,54 +10,51 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 
-class Gui private constructor() : InventoryHolder {
-
-    companion object {
-        fun new(init: Gui.() -> Unit = {}): Gui {
-            val gui = Gui()
-            gui.apply(init)
-            return gui
-        }
-    }
-
-    var title = ""
-    var rows = 1
-    var clickable = true
+class Gui constructor(
+    val title: String,
+    val rows: Int,
+    val clickable: Boolean = false,
+    val onClose: (InventoryCloseEvent) -> Unit = {},
+    val onOpen: (InventoryOpenEvent) -> Unit = {},
+    init: Gui.() -> Unit = {}
+) : InventoryHolder {
 
     private val slots = mutableMapOf<Int, ItemStack>()
-    val slotEvents = mutableMapOf<Int, InventoryClickEvent.() -> Unit>()
-    var onClose: (InventoryCloseEvent.() -> Unit)? = null
-    var onOpen: (InventoryOpenEvent.() -> Unit)? = null
+    internal val slotEvents = mutableMapOf<Int, InventoryClickEvent.() -> Unit>()
 
-    fun setItem(itemStack: ItemStack, slot: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+    init {
+        init()
+    }
+
+    fun setItem(itemStack: ItemStack, slot: Int, onClick: (InventoryClickEvent) -> Unit = {}) {
         slots[slot] = itemStack
-        clickEvent?.let { slotEvents[slot] = it }
+        slotEvents[slot] = onClick
     }
 
-    fun setItem(itemStack: ItemStack, vararg slots: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
-        slots.forEach { setItem(itemStack, it, clickEvent) }
+    fun setItem(itemStack: ItemStack, slots: List<Int>, onClick: (InventoryClickEvent) -> Unit = {}) {
+        slots.forEach { setItem(itemStack, it, onClick) }
     }
 
-    fun fillRow(itemStack: ItemStack, row: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
-        val slots = (0 until 9).map { it + (9 * row) }.toIntArray()
-        setItem(itemStack, *slots, clickEvent = clickEvent)
+    fun fillRow(itemStack: ItemStack, row: Int, onClick: (InventoryClickEvent) -> Unit = {}) {
+        val slots = (0 until 9).map { it + (9 * row) }
+        setItem(itemStack, slots, onClick)
     }
 
-    fun fillColumn(itemStack: ItemStack, column: Int, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
-        val slots = (0 until rows).map { (it * 9) + column }.toIntArray()
-        setItem(itemStack, *slots, clickEvent = clickEvent)
+    fun fillColumn(itemStack: ItemStack, column: Int, onClick: (InventoryClickEvent) -> Unit = {}) {
+        val slots = (0 until rows).map { (it * 9) + column }
+        setItem(itemStack, slots, onClick)
     }
 
-    fun fill(itemStack: ItemStack, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+    fun fill(itemStack: ItemStack, onClick: (InventoryClickEvent) -> Unit = {}) {
         for (i in 0 until (rows * 9)){
-            setItem(itemStack, i, clickEvent)
+            setItem(itemStack, i, onClick)
         }
     }
 
-    fun fillEmpty(itemStack: ItemStack, clickEvent: (InventoryClickEvent.() -> Unit)? = null) {
+    fun fillEmpty(itemStack: ItemStack, onClick: (InventoryClickEvent) -> Unit = {}) {
         for (i in 0 until (rows * 9)){
             if (!slots.containsKey(i)){
-                setItem(itemStack, i, clickEvent)
+                setItem(itemStack, i, onClick)
             }
         }
     }

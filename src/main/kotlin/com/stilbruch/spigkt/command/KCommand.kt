@@ -4,7 +4,7 @@ package com.stilbruch.spigkt.command
 
 import com.stilbruch.spigkt.sendError
 
-class KCommand(
+open class KCommand(
         val names: Array<String>,
         val help: String = "",
         val permission: String? = null,
@@ -27,7 +27,7 @@ class KCommand(
     }
 
     fun matches(input: String?): Boolean {
-        return names.contains(input ?: return false)
+        return names.contains(input?.toLowerCase() ?: return false)
     }
 
 }

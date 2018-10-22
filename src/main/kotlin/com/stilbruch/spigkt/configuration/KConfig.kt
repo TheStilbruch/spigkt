@@ -8,9 +8,8 @@ import java.io.File
 
 open class KConfig(val name: String) : KModule() {
 
-    private val file: File = File(PLUGIN.dataFolder, name)
-    private lateinit var yamlConfig: YamlConfiguration
-
+    protected val file: File = File(PLUGIN.dataFolder, name)
+    protected lateinit var yamlConfig: YamlConfiguration
 
     init {
         try {

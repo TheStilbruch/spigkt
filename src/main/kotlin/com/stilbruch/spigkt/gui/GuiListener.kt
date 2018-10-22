@@ -29,11 +29,13 @@ class GuiListener(private val plugin: JavaPlugin): Listener {
     fun onClose(e: InventoryCloseEvent) {
         if (e.inventory.holder !is Gui) return
         val gui: Gui = (e.inventory.holder as? Gui) ?: return
+        gui.onClose(e)
     }
 
     @EventHandler
     fun onOpen(e: InventoryOpenEvent) {
         if (e.inventory.holder !is Gui) return
         val gui: Gui = e.inventory.holder as? Gui ?: return
+        gui.onOpen(e)
     }
 }

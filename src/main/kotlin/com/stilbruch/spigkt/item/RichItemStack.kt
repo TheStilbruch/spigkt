@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta
 
 open class RichItemStack constructor(
     material: Material,
-    durability: Short = 0,
+    durability: Short = -1,
     name: String? = null,
     lore: List<String>? = null,
     enchantments: Map<Enchantment, Int>? = null,
@@ -21,15 +21,30 @@ open class RichItemStack constructor(
 ) : ItemStack(material) {
 
     companion object {
-        fun clone(itemStack: ItemStack, init: (RichItemStack.() -> Unit)? = null): RichItemStack {
+        fun clone(
+            itemStack: ItemStack,
+            material: Material? = null,
+            durability: Short = -1,
+            name: String? = null,
+            lore: List<String>? = null,
+            enchantments: Map<Enchantment, Int>? = null,
+            flags: Set<ItemFlag>? = null
+        ): RichItemStack {
             val richItem = itemStack as RichItemStack
-            init?.invoke(richItem)
+
+            if (material != null) richItem.type = material
+            if (durability.toInt() != -1) richItem.durability = durability
+            if (name != null) richItem.setName(name)
+            if (lore != null) richItem.setLore(lore)
+            enchantments?.forEach(richItem::addEnchant)
+            flags?.forEach(richItem::addFlag)
+
             return richItem
         }
     }
 
     init {
-        this.durability = durability
+        if (durability.toInt() != -1) this.durability = durability
         if (name != null) setName(name)
         if (lore != null) setLore(lore)
         enchantments?.forEach(::addEnchant)

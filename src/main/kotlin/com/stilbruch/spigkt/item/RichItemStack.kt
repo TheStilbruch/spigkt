@@ -20,6 +20,14 @@ open class RichItemStack constructor(
     flags: Set<ItemFlag>? = null
 ) : ItemStack(material) {
 
+    companion object {
+        fun clone(itemStack: ItemStack, init: (RichItemStack.() -> Unit)? = null): RichItemStack {
+            val richItem = itemStack as RichItemStack
+            init?.invoke(richItem)
+            return richItem
+        }
+    }
+
     init {
         this.durability = durability
         if (name != null) setName(name)

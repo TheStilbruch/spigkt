@@ -6,7 +6,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
     }
@@ -15,22 +14,18 @@ buildscript {
 group 'com.stilbruch'
 version '0.2'
 
-apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'maven-publish'
 apply plugin: 'kotlin'
 
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
     //maven { url "http://dl.bintray.com/jetbrains/spek" }
 }
 
 dependencies {
     //Main jar
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "co.aikar:acf-core:0.5.0-SNAPSHOT"
-    compile "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
     compileOnly 'org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT' // The Bukkit API with no shadowing.
 
     testCompile 'junit:junit:4.11'
@@ -51,15 +46,9 @@ publishing {
     }
 }
 
-shadowJar {
-    relocate 'co.aikar.commands', 'com.stilbruch.ftests.acf'
-}
-
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
-
-build.dependsOn shadowJar

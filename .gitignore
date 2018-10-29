@@ -1,7 +1,9 @@
 
 /build/
 /.idea/
+/.vscode/
 /out/
+/bin/
 /gradle/
 /.gradle/
 /gradlew

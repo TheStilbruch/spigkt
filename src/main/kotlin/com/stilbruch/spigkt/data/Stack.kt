@@ -2,7 +2,7 @@
 
 package com.stilbruch.spigkt.data
 
-class Stack<T> constructor(list:MutableList<T>) {
+class Stack<T> constructor(list: MutableList<T>) {
 
     constructor() : this(mutableListOf<T>())
 

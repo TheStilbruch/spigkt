@@ -23,12 +23,13 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         instance = this
     }
 
-    protected val commands: MutableSet<KCommand> = mutableSetOf()
+    protected open val commands: MutableSet<KCommand> = mutableSetOf()
     internal val modules: MutableSet<KModule> = mutableSetOf()
     var verbose = false
 
     final override fun onLoad() {
         onPluginLoad()
+        modules.forEach(KModule::onLoad)
         modules.forEach(KModule::onLoad)
     }
 

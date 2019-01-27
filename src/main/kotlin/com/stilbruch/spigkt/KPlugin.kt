@@ -44,9 +44,9 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         modules.forEach(KModule::onDisable)
     }
 
-    abstract fun onPluginLoad()
-    abstract fun onPluginEnable()
-    abstract fun onPluginDisable()
+    open fun onPluginLoad() {}
+    open fun onPluginEnable() {}
+    open fun onPluginDisable() {}
 
     /**
      * Registers an event listener

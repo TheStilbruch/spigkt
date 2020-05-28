@@ -3,7 +3,7 @@
 package com.stilbruch.spigkt
 
 import com.stilbruch.spigkt.command.CommandContext
-import com.stilbruch.spigkt.command.KCommand
+import com.stilbruch.spigkt.command.SCommand
 import com.stilbruch.spigkt.gui.GuiListener
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -23,7 +23,7 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
         instance = this
     }
 
-    protected open val commands: MutableSet<KCommand> = mutableSetOf()
+    protected open val commands: MutableSet<SCommand> = mutableSetOf()
     internal val modules: MutableSet<KModule> = mutableSetOf()
     var verbose = false
 
@@ -57,7 +57,7 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
 
     fun <E : Event> listen(type : Class<out E>, priority : EventPriority = EventPriority.NORMAL, ignoreCancelled : Boolean = true, handler : (E.() -> Unit)) {
         val listener = object : Listener, EventExecutor {
-            override fun execute(listener : Listener?, event : Event) {
+            override fun execute(listener : Listener, event : Event) {
                 if (listener != this) return
                 (event as E).apply(handler)
             }
@@ -70,22 +70,20 @@ abstract class KPlugin(val displayName: String) : JavaPlugin() {
                                           noinline handler : E.() -> Unit) =
             listen(E::class.java, priority, ignoreCancelled, handler)
 
-    final override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
-        val command: KCommand = commands.find { it.matches(label) } ?: return false
-
-        return handleCommand(command, sender, args.toList())
+    // Handle commands
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        commands
+            .find { it.names.contains(command.name) }
+            ?.handleContext(CommandContext(sender, args.toMutableList()))
+        // Always return true because this will always succeed
+        return true
     }
 
-    //This function checks for sub-commands
-    private fun handleCommand(command: KCommand, sender: CommandSender, args: List<String>): Boolean {
-        val subCommand: KCommand? = command.subCommands.find { it.matches(args.getOrNull(0)) }
-
-        return if (subCommand == null) {
-            command.handleContext(CommandContext(sender, args))
-            true
-        } else {
-            handleCommand(subCommand, sender, args.drop(1))
-        }
+    // Handle tab completes
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
+        return commands
+            .find { it.names.contains(command.name) }
+            ?.handleTabComplete(CommandContext(sender, args.toMutableList())) ?: mutableListOf()
     }
 
 }

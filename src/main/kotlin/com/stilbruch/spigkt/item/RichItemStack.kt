@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.SkullMeta
 
 open class RichItemStack constructor(
     material: Material,
-    durability: Short = -1,
     name: String? = null,
     lore: List<String>? = null,
     enchantments: Map<Enchantment, Int>? = null,
@@ -24,7 +23,6 @@ open class RichItemStack constructor(
         fun clone(
             itemStack: ItemStack,
             material: Material? = null,
-            durability: Short = -1,
             name: String? = null,
             lore: List<String>? = null,
             enchantments: Map<Enchantment, Int>? = null,
@@ -33,7 +31,6 @@ open class RichItemStack constructor(
             val richItem = itemStack as RichItemStack
 
             if (material != null) richItem.type = material
-            if (durability.toInt() != -1) richItem.durability = durability
             if (name != null) richItem.setName(name)
             if (lore != null) richItem.setLore(lore)
             enchantments?.forEach(richItem::addEnchant)
@@ -44,27 +41,26 @@ open class RichItemStack constructor(
     }
 
     init {
-        if (durability.toInt() != -1) this.durability = durability
         if (name != null) setName(name)
         if (lore != null) setLore(lore)
         enchantments?.forEach(::addEnchant)
         flags?.forEach(::addFlag)
     }
 
-    private fun changeMeta(func: ItemMeta.() -> Unit){
-        val meta = itemMeta
+    fun changeMeta(func: ItemMeta.() -> Unit){
+        val meta = itemMeta!!
         meta.func()
         itemMeta = meta
     }
 
     fun setName(name: String) {
         changeMeta {
-            displayName = name
+            setDisplayName(name)
         }
     }
 
     fun getName(): String {
-        return itemMeta.displayName
+        return itemMeta!!.displayName
     }
 
     fun setLore(lore: List<String>) {
@@ -73,12 +69,8 @@ open class RichItemStack constructor(
         }
     }
 
-    fun getLore(): List<String> {
-        return itemMeta.lore
-    }
-
-    fun setColor(color: DyeColor) {
-        durability = color.woolData.toShort()
+    fun getLore(): List<String>? {
+        return itemMeta?.lore
     }
 
     fun addEnchant(enchant: Enchantment, level: Int){

@@ -17,9 +17,7 @@ class GuiListener(private val plugin: JavaPlugin): Listener {
         if (e.currentItem == null) return
 
         val slot = e.slot
-        if (e.inventory.holder !is Gui) return
         val gui: Gui = e.inventory.holder as? Gui ?: return
-
         if (!gui.clickable) e.isCancelled = true
 
         gui.slotEvents[slot]?.invoke(e)
@@ -27,14 +25,12 @@ class GuiListener(private val plugin: JavaPlugin): Listener {
 
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        if (e.inventory.holder !is Gui) return
         val gui: Gui = (e.inventory.holder as? Gui) ?: return
         gui.onClose(e)
     }
 
     @EventHandler
     fun onOpen(e: InventoryOpenEvent) {
-        if (e.inventory.holder !is Gui) return
         val gui: Gui = e.inventory.holder as? Gui ?: return
         gui.onOpen(e)
     }
